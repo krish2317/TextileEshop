@@ -1,0 +1,18 @@
+﻿@model TextileEshop.Models.Product
+
+<div class="container mt-4">
+    <h2>Product Details</h2>
+
+    <div class="card p-4 shadow-sm">
+        <h3>@Model.Name</h3>
+        <p><strong>Brand:</strong> @Model.Brand</p>
+        <p><strong>Category:</strong> @Model.Category</p>
+        <p><strong>Price:</strong> ₹@Model.Price</p>
+        <p><strong>Discount:</strong> @Model.Discount %</p>
+        <p><strong>Stock Quantity:</strong> @Model.StockQuantity</p>
+        <p><strong>Added On:</strong> @Model.CreatedDate.ToShortDateString()</p>
+        <p><strong>Description:</strong> @Model.Description</p>
+
+        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>

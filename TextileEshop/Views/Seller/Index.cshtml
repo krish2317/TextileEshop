@@ -1,0 +1,35 @@
+﻿@model IEnumerable<TextileEshop.Models.Product>
+
+<div class="container mt-4">
+    <h2>My Products</h2>
+
+    <a asp-action="Add" class="btn btn-success mb-3">➕ Add New Product</a>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Category</td>
+                    <td>₹@product.Price</td>
+                    <td>@product.StockQuantity</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-info btn-sm">👁️ View</a>
+                        <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-warning btn-sm">✏️ Edit</a>
+                        <a asp-action="Delete" asp-route-id="@product.Id" class="btn btn-danger btn-sm">🗑️ Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

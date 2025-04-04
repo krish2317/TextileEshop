@@ -1,0 +1,49 @@
+﻿@model IEnumerable<TextileEshop.Models.Order>
+
+<div class="container mt-4">
+    <h2>Order List</h2>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Order ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                @if (User.IsInRole("Seller"))
+                {
+                    <th>Actions</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                foreach (var item in order.OrderItems)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@item.Product.Name</td>
+                        <td>@item.Quantity</td>
+                        <td>@order.Status</td>
+
+                        @if (User.IsInRole("Seller"))
+                        {
+                            <td>
+                                <form asp-action="UpdateOrderStatus" method="post" class="d-inline">
+                                    <input type="hidden" name="orderId" value="@order.Id" />
+                                    <select name="status" class="form-select form-select-sm" style="width: 120px;">
+                                        <option value="Pending" selected="@("Pending" == order.Status)">Pending</option>
+                                        <option value="Shipped" selected="@("Shipped" == order.Status)">Shipped</option>
+                                        <option value="Delivered" selected="@("Delivered" == order.Status)">Delivered</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary btn-sm mt-1">Update</button>
+                                </form>
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

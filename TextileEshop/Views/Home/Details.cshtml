@@ -1,0 +1,100 @@
+﻿@model TextileEshop.Models.Product
+@using TextileEshop.Models
+
+@{
+    ViewData["Title"] = "Product Details";
+    var reviews = ViewBag.Reviews as List<Review>;
+    var averageRating = reviews.Any() ? reviews.Average(r => r.Rating) : 0;
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Product Image -->
+        <div class="col-md-5">
+            <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Name">
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-7">
+            <h2>@Model.Name</h2>
+            <p class="text-muted">@Model.Category</p>
+            <h4 class="text-danger">
+                $@(Model.Price - (Model.Price * Model.Discount / 100))
+                <small class="text-muted"><del>$@Model.Price</del></small>
+            </h4>
+
+            <!-- Average Rating -->
+            <div class="my-2">
+                <span class="badge bg-warning text-dark">⭐ @averageRating.ToString("0.0") / 5</span>
+                <span class="text-muted">(@reviews.Count reviews)</span>
+            </div>
+
+            <p>@Model.Description</p>
+
+            <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+            </form>
+
+
+            <form asp-controller="Cart" asp-action="BuyNow" method="post" class="d-inline">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger">Buy Now</button>
+            </form>
+
+        </div>
+    </div>
+
+    <hr class="mt-5">
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h4>Leave a Review</h4>
+
+        <form asp-controller="Review" asp-action="AddReview" method="post">
+            <input type="hidden" name="ProductId" value="@Model.Id" />
+
+            <!-- Show validation errors -->
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label>Rating (1-5)</label>
+                <select name="Rating" class="form-select" required>
+                    <option value="">Select Rating</option>
+                    <option value="1">⭐ 1</option>
+                    <option value="2">⭐ 2</option>
+                    <option value="3">⭐ 3</option>
+                    <option value="4">⭐ 4</option>
+                    <option value="5">⭐ 5</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label>Comment</label>
+                <textarea name="Comment" class="form-control" rows="3" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-success">Submit Review</button>
+        </form>
+    }
+
+    <!-- Display Reviews -->
+    <h4>Reviews</h4>
+    @if (reviews.Any())
+    {
+        foreach (var review in reviews)
+        {
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h6><strong>@review.User.FullName</strong> - <small class="text-muted">@review.Date.ToShortDateString()</small></h6>
+                    <p class="mb-1">⭐ @review.Rating / 5</p>
+                    <p>@review.Comment</p>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+    }
+</div>
